@@ -12,33 +12,33 @@ import java.util.ResourceBundle;
 import fr.digincamic.tf.entite.*;
 
 
-public class CategorieDaoJdbc implements CategorieDao 
+public class IngredientDaoJdbc implements IngredientDao 
 {
 	public static void main(String[] a)
 	{
-		CategorieDaoJdbc ofo = new CategorieDaoJdbc();
-		List<Categorie> listeCategorie = ofo.extraire();
-		for(Categorie ar : listeCategorie)
+		IngredientDaoJdbc ofo = new IngredientDaoJdbc();
+		List<Ingredient> listeIngredient = ofo.extraire();
+		for(Ingredient ar : listeIngredient)
 		{
 			System.out.println(ar);
 		}		
 		
 	}
 
-	public List<Categorie> extraire() 
+	public List<Ingredient> extraire() 
 	{
 
 		Connection connection = null;
-		List<Categorie> listeCategories = new ArrayList<>();
+		List<Ingredient> listeIngredients = new ArrayList<>();
 		try
 		{
 			connection = getConnection();
 			Statement monCanal = connection.createStatement();
-			ResultSet monResultat = monCanal.executeQuery("SELECT * FROM Categorie;");
+			ResultSet monResultat = monCanal.executeQuery("SELECT * FROM INGREDIENT;");
 			while(monResultat.next())
 			{
-				listeCategories.add(new Categorie(monResultat.getId_categorie("id_categorie"), monResultat.getCategorie("categorie"),
-						monResultat.getId_produit("id_produit"), monResultat.getId_marque("id_marque")));
+				listeIngredients.add(new Ingredient(monResultat.getId_ingredient("id_Ingredient"), monResultat.getIngredient("Ingredient"),
+						monResultat.getId_produit("id_produit")));
 			}
 			monResultat.close();
 			monCanal.close();
@@ -59,11 +59,11 @@ public class CategorieDaoJdbc implements CategorieDao
 				System.err.println("Probl de connection close : " + e.getMessage());
 			}
 		}
-		return listeCategories;
+		return listeIngredients;
 	}
 
-	/**fait un insert dans la base de compta sur la table Categorie*/
-	public void insert(Categorie Categorie) 
+	/**fait un insert dans la base de compta sur la table Ingredient*/
+	public void insert(Ingredient Ingredient) 
 	{
 		Connection connection = null;
 
@@ -71,14 +71,13 @@ public class CategorieDaoJdbc implements CategorieDao
 		{
 			connection = getConnection();
 			Statement monCanal = connection.createStatement();
-			int nb = monCanal.executeUpdate("INSERT INTO Categorie (id_categorie,categorie,id_produit,id_marque) values ("
-			+Categorie.getId_categorie()+",'" + 
-					Categorie.getCategorie()+"','" +Categorie.getId_produit()+"'," +
-					Categorie.getId_marque()+");");
+			int nb = monCanal.executeUpdate("INSERT INTO Ingredient (id_ingredient,ingredient,id_produit) values ("
+			+Ingredient.getId_ingredient()+",'" + 
+					Ingredient.getIngredient()+"','" +Ingredient.getId_produit() +");");
 			
 			if(nb==1)
 			{
-				System.out.println("Categorie ajouté !");
+				System.out.println("Ingredient ajouté !");
 			}
 			monCanal.close();
 		} 
@@ -100,7 +99,7 @@ public class CategorieDaoJdbc implements CategorieDao
 	}
 
 	/**
-	 * fait un update dans la table Categorie en changeant le nom ancienNom par nouveauNom
+	 * fait un update dans la table Ingredient en changeant le nom ancienNom par nouveauNom
 	 */
 	public int update(String ancienNom, String nouveauNom) 
 	{
@@ -111,7 +110,7 @@ public class CategorieDaoJdbc implements CategorieDao
 		{
 			connection = getConnection();
 			Statement monCanal = connection.createStatement();
-			nb = monCanal.executeUpdate("UPDATE Categorie SET ref ='" + 
+			nb = monCanal.executeUpdate("UPDATE Ingredient SET ref ='" + 
 			nouveauNom+"' WHERE ref = '"+ancienNom+"';");
 			
 			monCanal.close();
@@ -136,9 +135,9 @@ public class CategorieDaoJdbc implements CategorieDao
 	}
 
 	/**
-	 *supprime le Categorie specifie dans la table Categorie
+	 *supprime le Ingredient specifie dans la table Ingredient
 	 */
-	public boolean delete(Categorie Categorie) 
+	public boolean delete(Ingredient Ingredient) 
 	{
 		Connection connection = null;
 		boolean nb = false;
@@ -148,7 +147,7 @@ public class CategorieDaoJdbc implements CategorieDao
 			connection = getConnection();
 			Statement monCanal = connection.createStatement();
 			nb = monCanal.executeUpdate(
-					"DELETE FROM Categorie WHERE id="+ Categorie.getId_categorie() +";")
+					"DELETE FROM Ingredient WHERE id="+ Ingredient.getId_ingredient() +";")
 					==1;
 			monCanal.close();
 		} 
